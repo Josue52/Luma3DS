@@ -35,11 +35,11 @@
 #include "gdb/net.h"
 
 Menu debuggerMenu = {
-    "Debugger options menu",
+    "Menu de ajustes de depurador",
     .nbItems = 2,
     {
-        { "Enable debugger",  METHOD, .method = &DebuggerMenu_EnableDebugger  },
-        { "Disable debugger", METHOD, .method = &DebuggerMenu_DisableDebugger }
+        { "Activar depurador",  METHOD, .method = &DebuggerMenu_EnableDebugger  },
+        { "Desactivar depurador", METHOD, .method = &DebuggerMenu_DisableDebugger }
     }
 };
 
@@ -82,15 +82,15 @@ void DebuggerMenu_EnableDebugger(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Debugger options menu");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de ajustes de depurador");
 
         if(alreadyEnabled)
-            Draw_DrawString(10, 30, COLOR_WHITE, "Already enabled!");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Ya activado!");
         else if(!isSocURegistered)
-            Draw_DrawString(10, 30, COLOR_WHITE, "Can't start the debugger before the system has fi-\nnished loading.");
+            Draw_DrawString(10, 30, COLOR_WHITE, "No se puede iniciar el depurador antes\nde que el sistema termine de cargar.");
         else
         {
-            Draw_DrawString(10, 30, COLOR_WHITE, "Starting debugger...");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Iniciando depurador...");
 
             if(!done)
             {
@@ -103,12 +103,12 @@ void DebuggerMenu_EnableDebugger(void)
                 }
 
                 if(res != 0)
-                    sprintf(buf, "Starting debugger... failed (0x%08x).", (u32)res);
+                    sprintf(buf, "Iniciando depurador... fallido (0x%08x).", (u32)res);
 
                 done = true;
             }
             if(res == 0)
-                Draw_DrawString(10, 30, COLOR_WHITE, "Starting debugger... OK.");
+                Draw_DrawString(10, 30, COLOR_WHITE, "Iniciando depurador... OK.");
             else
                 Draw_DrawString(10, 30, COLOR_WHITE, buf);
         }
@@ -135,13 +135,13 @@ void DebuggerMenu_DisableDebugger(void)
     }
 
     if(res != 0)
-        sprintf(buf, "Failed to disable debugger (0x%08x).", (u32)res);
+        sprintf(buf, "Fallo al desactivar depurador (0x%08x).", (u32)res);
 
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Debugger options menu");
-        Draw_DrawString(10, 30, COLOR_WHITE, initialized ? (res == 0 ? "Debugger disabled successfully." : buf) : "Debugger not enabled.");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de ajustes de depurador");
+        Draw_DrawString(10, 30, COLOR_WHITE, initialized ? (res == 0 ? "Depurador desactivado correctamente!" : buf) : "Depurador no esta activado.");
         Draw_FlushFramebuffer();
         Draw_Unlock();
     }

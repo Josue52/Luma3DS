@@ -69,13 +69,13 @@ bool Ldr_Get3dsxSize(u32* pSize, IFile *file)
 
     if (IFile_Read2(file, &hdr, sizeof(hdr), 0) != sizeof(hdr))
     {
-        Log_PrintP("Cannot read 3DSX header");
+        Log_PrintP("No se puede leer 3DSX header");
         return false;
     }
 
     if (hdr.magic != _3DSX_MAGIC)
     {
-        Log_PrintP("Not a valid 3DSX file");
+        Log_PrintP("No es un archivo 3DSX valido");
         return false;
     }
 
@@ -131,7 +131,7 @@ Handle Ldr_CodesetFrom3dsx(const char* name, u32* codePages, u32 baseAddr, IFile
     {
         if (IFile_Read2(file, &extraPage[i*nRelocTables], hdr.relocHdrSize, readOffset) != hdr.relocHdrSize)
         {
-            Log_PrintP("Cannot read relheader %d", i);
+            Log_PrintP("No se pudo leer relheader %d", i);
             return 0;
         }
         readOffset += hdr.relocHdrSize;
@@ -140,7 +140,7 @@ Handle Ldr_CodesetFrom3dsx(const char* name, u32* codePages, u32 baseAddr, IFile
     // Read the code segment
     if (IFile_Read2(file, d.segPtrs[0], hdr.codeSegSize, readOffset) != hdr.codeSegSize)
     {
-        Log_PrintP("Cannot read code segment");
+        Log_PrintP("No se pudo leer segmento de datos");
         return 0;
     }
     readOffset += hdr.codeSegSize;
@@ -157,7 +157,7 @@ Handle Ldr_CodesetFrom3dsx(const char* name, u32* codePages, u32 baseAddr, IFile
     u32 dataLoadSegSize = hdr.dataSegSize - hdr.bssSize;
     if (IFile_Read2(file, d.segPtrs[2], dataLoadSegSize, readOffset) != dataLoadSegSize)
     {
-        Log_PrintP("Cannot read data segment");
+        Log_PrintP("No se pudo leer segmento de datos");
         return 0;
     }
     readOffset += dataLoadSegSize;

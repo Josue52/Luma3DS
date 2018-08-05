@@ -36,13 +36,13 @@
 #include "ifile.h"
 
 Menu miscellaneousMenu = {
-    "Miscellaneous options menu",
+    "Menu de opciones miscelaneas",
     .nbItems = 4,
     {
-        { "Switch the hb. title to the current app.", METHOD, .method = &MiscellaneousMenu_SwitchBoot3dsxTargetTitle },
-        { "Change the menu combo", METHOD, .method = MiscellaneousMenu_ChangeMenuCombo },
-        { "Start InputRedirection", METHOD, .method = &MiscellaneousMenu_InputRedirection },
-        { "Save settings", METHOD, .method = &MiscellaneousMenu_SaveSettings },
+        { "Intercambia el hb con la app actual.", METHOD, .method = &MiscellaneousMenu_SwitchBoot3dsxTargetTitle },
+        { "Cambia el combo del menu", METHOD, .method = MiscellaneousMenu_ChangeMenuCombo },
+        { "Iniciar InputRedirection", METHOD, .method = &MiscellaneousMenu_InputRedirection },
+        { "Guardar ajustes", METHOD, .method = &MiscellaneousMenu_SaveSettings },
     }
 };
 
@@ -75,21 +75,21 @@ void MiscellaneousMenu_SwitchBoot3dsxTargetTitle(void)
         if(R_SUCCEEDED(res) && ((u32)(titleId >> 32) == 0x00040010 || (u32)(titleId >> 32) == 0x00040000))
         {
             HBLDR_3DSX_TID = titleId;
-            miscellaneousMenu.items[0].title = "Switch the hb. title to hblauncher_loader";
+            miscellaneousMenu.items[0].title = "Intercambia el hb con la app actual";
         }
         else if(R_FAILED(res))
             sprintf(failureReason, "%08x", (u32)res);
         else
         {
             res = -1;
-            strcpy(failureReason, "no suitable process found");
+            strcpy(failureReason, "no se encontro un proceso adecuado");
         }
     }
     else
     {
         res = 0;
         HBLDR_3DSX_TID = HBLDR_DEFAULT_3DSX_TID;
-        miscellaneousMenu.items[0].title = "Switch the hb. title to the current app.";
+        miscellaneousMenu.items[0].title = "Intercambia el hb con la app actual.";
     }
 
     Draw_Lock();
@@ -99,12 +99,12 @@ void MiscellaneousMenu_SwitchBoot3dsxTargetTitle(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Miscellaneous options menu");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de opciones miscelaneos");
 
         if(R_SUCCEEDED(res))
-            Draw_DrawString(10, 30, COLOR_WHITE, "Operation succeeded.");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Operacion completada.");
         else
-            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operation failed (%s).", failureReason);
+            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operacion fallida (%s).", failureReason);
 
         Draw_FlushFramebuffer();
         Draw_Unlock();
@@ -141,10 +141,10 @@ void MiscellaneousMenu_ChangeMenuCombo(void)
     MiscellaneousMenu_ConvertComboToString(comboStrOrig, menuCombo);
 
     Draw_Lock();
-    Draw_DrawString(10, 10, COLOR_TITLE, "Miscellaneous options menu");
+    Draw_DrawString(10, 10, COLOR_TITLE, "Menu de opciones miscelaneas");
 
-    posY = Draw_DrawFormattedString(10, 30, COLOR_WHITE, "The current menu combo is:  %s", comboStrOrig);
-    posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Please enter the new combo:");
+    posY = Draw_DrawFormattedString(10, 30, COLOR_WHITE, "El actual combo de menu es:  %s", comboStrOrig);
+    posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Porfavor introduce un nuevo combo:");
 
     Draw_FlushFramebuffer();
     Draw_Unlock();
@@ -155,12 +155,12 @@ void MiscellaneousMenu_ChangeMenuCombo(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Miscellaneous options menu");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de opciones miscelaneas");
 
-        posY = Draw_DrawFormattedString(10, 30, COLOR_WHITE, "The current menu combo is:  %s", comboStrOrig);
-        posY = Draw_DrawFormattedString(10, posY + SPACING_Y, COLOR_WHITE, "Please enter the new combo: %s", comboStr) + SPACING_Y;
+        posY = Draw_DrawFormattedString(10, 30, COLOR_WHITE, "El actual combo de menu es:  %s", comboStrOrig);
+        posY = Draw_DrawFormattedString(10, posY + SPACING_Y, COLOR_WHITE, "Porfavor introduce un nuevo combo: %s", comboStr) + SPACING_Y;
 
-        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Successfully changed the menu combo.");
+        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Combo de menu cambiado satisfactoriamente.");
 
         Draw_FlushFramebuffer();
         Draw_Unlock();
@@ -223,11 +223,11 @@ void MiscellaneousMenu_SaveSettings(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Miscellaneous options menu");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de opciones miscelaneas");
         if(R_SUCCEEDED(res))
-            Draw_DrawString(10, 30, COLOR_WHITE, "Operation succeeded.");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Operacion completada.");
         else
-            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operation failed (0x%08x).", res);
+            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operacion fallida (0x%08x).", res);
         Draw_FlushFramebuffer();
         Draw_Unlock();
     }
@@ -252,9 +252,9 @@ void MiscellaneousMenu_InputRedirection(void)
         svcCloseHandle(inputRedirectionThreadStartedEvent);
 
         if(res != 0)
-            sprintf(buf, "Failed to stop InputRedirection (0x%08x).", (u32)res);
+            sprintf(buf, "Fallo al detener InputRedirection (0x%08x).", (u32)res);
         else
-            miscellaneousMenu.items[2].title = "Start InputRedirection";
+            miscellaneousMenu.items[2].title = "Iniciar InputRedirection";
     }
     else
     {
@@ -282,13 +282,13 @@ void MiscellaneousMenu_InputRedirection(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Miscellaneous options menu");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de opciones miscelaneas");
 
         if(!wasEnabled && cantStart)
-            Draw_DrawString(10, 30, COLOR_WHITE, "Can't start the input redirection before the system\nhas finished loading.");
+            Draw_DrawString(10, 30, COLOR_WHITE, "No se puede empezar input redirection\nantes de que el sistema termine de cargar.");
         else if(!wasEnabled)
         {
-            Draw_DrawString(10, 30, COLOR_WHITE, "Starting InputRedirection...");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Iniciando InputRedirection...");
             if(!done)
             {
                 res = InputRedirection_DoOrUndoPatches();
@@ -308,22 +308,22 @@ void MiscellaneousMenu_InputRedirection(void)
                 }
 
                 if(res != 0)
-                    sprintf(buf, "Starting InputRedirection... failed (0x%08x).", (u32)res);
+                    sprintf(buf, "Iniciando InputRedirection... fallido (0x%08x).", (u32)res);
                 else
-                    miscellaneousMenu.items[2].title = "Stop InputRedirection";
+                    miscellaneousMenu.items[2].title = "Detener InputRedirection";
 
                 done = true;
             }
 
             if(res == 0)
-                Draw_DrawString(10, 30, COLOR_WHITE, "Starting InputRedirection... OK.");
+                Draw_DrawString(10, 30, COLOR_WHITE, "Empezando InputRedirection... OK.");
             else
                 Draw_DrawString(10, 30, COLOR_WHITE, buf);
         }
         else
         {
             if(res == 0)
-                Draw_DrawString(10, 30, COLOR_WHITE, "InputRedirection stopped successfully.");
+                Draw_DrawString(10, 30, COLOR_WHITE, "InputRedirection detenida correctamente.");
             else
                 Draw_DrawString(10, 30, COLOR_WHITE, buf);
         }

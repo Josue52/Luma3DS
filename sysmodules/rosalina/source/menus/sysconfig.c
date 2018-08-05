@@ -33,11 +33,11 @@
 #include "ifile.h"
 
 Menu sysconfigMenu = {
-    "System configuration menu",
+    "Menu de configuraciones del sistema",
     .nbItems = 2,
     {
-        { "Toggle LEDs", METHOD, .method = &SysConfigMenu_ToggleLEDs },
-        { "Toggle Wireless", METHOD, .method = &SysConfigMenu_ToggleWireless },
+        { "Alternar LEDs", METHOD, .method = &SysConfigMenu_ToggleLEDs },
+        { "Alternar Conexion Inalambrica", METHOD, .method = &SysConfigMenu_ToggleWireless },
     }
 };
 
@@ -51,11 +51,11 @@ void SysConfigMenu_ToggleLEDs(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "System configuration menu");
-        Draw_DrawString(10, 30, COLOR_WHITE, "Press A to toggle, press B to go back.");
-        Draw_DrawString(10, 50, COLOR_RED, "WARNING:");
-        Draw_DrawString(10, 60, COLOR_WHITE, "  * Entering sleep mode will reset the LED state!");
-        Draw_DrawString(10, 70, COLOR_WHITE, "  * LEDs cannot be toggled when the battery is low!");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de configuraciones del sistema");
+        Draw_DrawString(10, 30, COLOR_WHITE, "Presiona A para alternar, presiona B para volver.");
+        Draw_DrawString(10, 50, COLOR_RED, "Advertencia:");
+        Draw_DrawString(10, 60, COLOR_WHITE, "  * Entrar a sleep reiniciara el estado LED!");
+        Draw_DrawString(10, 70, COLOR_WHITE, "  * No puedes alternar LED con bateria baja!");
 
         Draw_FlushFramebuffer();
         Draw_Unlock();
@@ -112,22 +112,22 @@ void SysConfigMenu_ToggleWireless(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "System configuration menu");
-        Draw_DrawString(10, 30, COLOR_WHITE, "Press A to toggle, press B to go back.");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu de configuraciones del sistema");
+        Draw_DrawString(10, 30, COLOR_WHITE, "Presiona A para alternar, presiona B para volver.");
 
         u8 wireless = (*(vu8 *)((0x10140000 | (1u << 31)) + 0x180));
 
         if(nwmRunning)
         {
-            Draw_DrawString(10, 50, COLOR_WHITE, "Current status:");
-            Draw_DrawString(100, 50, (wireless ? COLOR_GREEN : COLOR_RED), (wireless ? " ON " : " OFF"));
+            Draw_DrawString(10, 50, COLOR_WHITE, "Estado actual:");
+            Draw_DrawString(100, 50, (wireless ? COLOR_GREEN : COLOR_RED), (wireless ? "Encendido" : "Apagado"));
         }
         else
         {
-            Draw_DrawString(10, 50, COLOR_RED, "NWM isn't running.");
-            Draw_DrawString(10, 60, COLOR_RED, "If you're currently on Test Menu,");
-            Draw_DrawString(10, 70, COLOR_RED, "exit then press R+RIGHT to toggle the WiFi.");
-            Draw_DrawString(10, 80, COLOR_RED, "Otherwise, simply exit and wait a few seconds.");
+            Draw_DrawString(10, 50, COLOR_RED, "NWM no esta corriendo.");
+            Draw_DrawString(10, 60, COLOR_RED, "Si estas actualmente en Test Menu, sal");
+            Draw_DrawString(10, 70, COLOR_RED, "luego presiona R+IZQUIERDA. para alternar WiFi.");
+            Draw_DrawString(10, 80, COLOR_RED, "De otra manera, simplemente sal y espera unos segundos.");
         }
 
         Draw_FlushFramebuffer();
