@@ -35,24 +35,28 @@
 #include "menus/debugger.h"
 #include "menus/miscellaneous.h"
 #include "menus/sysconfig.h"
+#include "menus/tools.h"
+#include "menus/gsplcd.h"
+#include "menus/explorer.h"
 #include "ifile.h"
 #include "memory.h"
 #include "fmt.h"
 
 Menu rosalinaMenu = {
-    "Rosalina menu",
-    .nbItems = 10,
+    "Menu Rosalina",
+    .nbItems = 11,
     {
         { "New 3DS menu...", MENU, .menu = &N3DSMenu },
-        { "Cheats...", METHOD, .method = &RosalinaMenu_Cheats },
-        { "Process list", METHOD, .method = &RosalinaMenu_ProcessList },
-        { "Take screenshot (slow!)", METHOD, .method = &RosalinaMenu_TakeScreenshot },
-        { "Debugger options...", MENU, .menu = &debuggerMenu },
-        { "System configuration...", MENU, .menu = &sysconfigMenu },
-        { "Miscellaneous options...", MENU, .menu = &miscellaneousMenu },
-        { "Power off", METHOD, .method = &RosalinaMenu_PowerOff },
-        { "Reboot", METHOD, .method = &RosalinaMenu_Reboot },
-        { "Credits", METHOD, .method = &RosalinaMenu_ShowCredits }
+        { "Trucos...", METHOD, .method = &RosalinaMenu_Cheats },
+        { "Lista de procesos", METHOD, .method = &RosalinaMenu_ProcessList },
+        { "Tomar captura de pantalla (lento!)", METHOD, .method = &RosalinaMenu_TakeScreenshot },
+        { "Opciones de Depurador...", MENU, .menu = &debuggerMenu },
+        { "Configuraciones del sistema...", MENU, .menu = &sysconfigMenu },
+        { "Miscelaneo...", MENU, .menu = &miscellaneousMenu },
+	    { "Herramientas", MENU, .menu = &MenuOptions},
+		{ "Apagar", METHOD, .method = &RosalinaMenu_PowerOff },
+        { "Reiniciar", METHOD, .method = &RosalinaMenu_Reboot },
+        { "Creditos", METHOD, .method = &RosalinaMenu_ShowCredits }
     }
 };
 
@@ -66,22 +70,25 @@ void RosalinaMenu_ShowCredits(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Rosalina -- Luma3DS credits");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Rosalina -- Creditos de Luma");
 
         u32 posY = Draw_DrawString(10, 30, COLOR_WHITE, "Luma3DS (c) 2016-2018 AuroraWright, TuxSH") + SPACING_Y;
 
-        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "3DSX loading code by fincs");
-        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Networking code & basic GDB functionality by Stary");
-        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "InputRedirection by Stary (PoC by ShinyQuagsire)");
-
+        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Codigo de carga de 3DSX por fincs");
+        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Codigo de Red & funcionalidad basica GDB por Stary");
+        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "InputRedirection por Stary (PoC por ShinyQuagsire)");
+		posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Menu de herramientas por Kasai07");
+        posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_GREEN, "Traduccion por Josue52");
+		
         posY += 2 * SPACING_Y;
 
         Draw_DrawString(10, posY, COLOR_WHITE,
             (
-                "Special thanks to:\n"
+                "Agradecimientos especiales a:\n"
                 "  Bond697, WinterMute, yifanlu,\n"
-                "  Luma3DS contributors, ctrulib contributors,\n"
-                "  other people"
+                "  Contribuidores de Luma3DS, \n"
+                "  Contribuidores de ctrulib, \n"
+				"  otras personas"
             ));
 
         Draw_FlushFramebuffer();
@@ -100,8 +107,8 @@ void RosalinaMenu_Reboot(void)
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Rosalina menu");
-        Draw_DrawString(10, 30, COLOR_WHITE, "Press A to reboot, press B to go back.");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu Rosalina");
+        Draw_DrawString(10, 30, COLOR_WHITE, "Presiona A para reiniciar, presiona B para volver.");
         Draw_FlushFramebuffer();
         Draw_Unlock();
 
@@ -127,8 +134,8 @@ void RosalinaMenu_PowerOff(void) // Soft shutdown.
     do
     {
         Draw_Lock();
-        Draw_DrawString(10, 10, COLOR_TITLE, "Rosalina menu");
-        Draw_DrawString(10, 30, COLOR_WHITE, "Press A to power off, press B to go back.");
+        Draw_DrawString(10, 10, COLOR_TITLE, "Menu Rosalina");
+        Draw_DrawString(10, 30, COLOR_WHITE, "Presiona A para apagar, presiona B para volver.");
         Draw_FlushFramebuffer();
         Draw_Unlock();
 
@@ -283,9 +290,9 @@ end:
         Draw_Lock();
         Draw_DrawString(10, 10, COLOR_TITLE, "Screenshot");
         if(R_FAILED(res))
-            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operation failed (0x%08x).", (u32)res);
+            Draw_DrawFormattedString(10, 30, COLOR_WHITE, "Operacion fallida (0x%08x).", (u32)res);
         else
-            Draw_DrawString(10, 30, COLOR_WHITE, "Operation succeeded.");
+            Draw_DrawString(10, 30, COLOR_WHITE, "Operation completada.");
 
         Draw_FlushFramebuffer();
         Draw_Unlock();

@@ -78,10 +78,10 @@ static int ERRF_FormatError(char *out, ERRF_FatalErrInfo *info)
         const char *exceptionType = (u32)info->data.exception_data.excep.type > (u32)ERRF_EXCEPTION_VFP ?
                                     exceptionTypes[4] : exceptionTypes[(u32)info->data.exception_data.excep.type];
 
-        out += sprintf(out, "Error type:       exception (%s)\n", exceptionType);
+        out += sprintf(out, "Tipo de error:       excepcion (%s)\n", exceptionType);
     }
     else
-        out += sprintf(out, "Error type:       %s\n", type);
+        out += sprintf(out, "Tipo de error:       %s\n", type);
 
     if(info->type != ERRF_ERRTYPE_CARD_REMOVED)
     {
@@ -149,19 +149,19 @@ static int ERRF_FormatError(char *out, ERRF_FatalErrInfo *info)
     else if(info->type != ERRF_ERRTYPE_CARD_REMOVED)
     {
         if(info->type != ERRF_ERRTYPE_FAILURE)
-            out += sprintf(out, "Address:          0x%08x\n", info->pcAddr);
+            out += sprintf(out, "Direccion:          0x%08x\n", info->pcAddr);
 
-        out += sprintf(out, "Error code:       0x%08x\n", info->resCode);
+        out += sprintf(out, "Codigo de error:       0x%08x\n", info->resCode);
     }
 
     const char *desc;
     switch(info->type)
     {
         case ERRF_ERRTYPE_CARD_REMOVED:
-            desc = "The card was removed.";
+            desc = "La tarjeta fue removida.";
             break;
         case ERRF_ERRTYPE_MEM_CORRUPT:
-            desc = "The System Memory has been damaged.";
+            desc = "La memoria del sistema ha sido dañada.";
             break;
         case ERRF_ERRTYPE_FAILURE:
             info->data.failure_mesg[0x60] = 0; // make sure the last byte in the IPC buffer is NULL
@@ -183,14 +183,14 @@ static void ERRF_DisplayError(ERRF_FatalErrInfo *info)
 {
     Draw_Lock();
 
-    u32 posY = Draw_DrawString(10, 10, COLOR_RED, userString[0] == 0 ? "An error occurred (ErrDisp)" : userString);
+    u32 posY = Draw_DrawString(10, 10, COLOR_RED, userString[0] == 0 ? "Un error ha ocurrido (ErrDisp)" : userString);
     char buf[0x400];
 
     ERRF_FormatError(buf, info);
     posY = posY < 30 ? 30 : posY;
 
     posY = Draw_DrawString(10, posY, COLOR_WHITE, buf);
-    posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Press any button to reboot.");
+    posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Presiona cualquier boton para reiniciar.");
 
     Draw_FlushFramebuffer();
     Draw_Unlock();
