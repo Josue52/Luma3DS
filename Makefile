@@ -19,9 +19,9 @@ commit := $(shell git rev-parse --short=8 HEAD)
 is_release := 0
 
 ifeq ($(strip $(revision)),)
-	revision := v0.0.0-0
-	version_major := 0
-	version_minor := 0
+	revision := v9.1
+	version_major := 9
+	version_minor := 1
 	version_build := 0
 endif
 
@@ -156,7 +156,7 @@ $(dir_build)/%.bin: $(dir_patches)/%.s
 	@armips $<
 
 $(dir_build)/memory.o $(dir_build)/strings.o: CFLAGS += -O3
-$(dir_build)/config.o: CFLAGS += -DCONFIG_TITLE="\"$(name) $(revision) configuration\""
+$(dir_build)/config.o: CFLAGS += -DCONFIG_TITLE="\"Configuracion de $(name) $(revision)\""
 $(dir_build)/patches.o: CFLAGS += -DVERSION_MAJOR="$(version_major)" -DVERSION_MINOR="$(version_minor)"\
 						-DVERSION_BUILD="$(version_build)" -DISRELEASE="$(is_release)" -DCOMMIT_HASH="0x$(commit)"
 $(dir_build)/firm.o: $(dir_build)/modules.bin
