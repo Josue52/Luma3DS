@@ -74,126 +74,130 @@ void writeConfig(bool isConfigOptions)
     }
 
     if(!fileWrite(&configData, CONFIG_FILE, sizeof(CfgData)))
-        error("Error writing the configuration file");
+        error("Error escribiendo el archivo de configuracion");
 }
 
 void configMenu(bool oldPinStatus, u32 oldPinMode)
 {
-    static const char *multiOptionsText[]  = { "Default EmuNAND: 1( ) 2( ) 3( ) 4( )",
-                                               "Screen brightness: 4( ) 3( ) 2( ) 1( )",
-                                               "Splash: Off( ) Before( ) After( ) payloads",
-                                               "Splash duration: 1( ) 3( ) 5( ) 7( ) seconds",
-                                               "PIN lock: Off( ) 4( ) 6( ) 8( ) digits",
-                                               "New 3DS CPU: Off( ) Clock( ) L2( ) Clock+L2( )",
+    static const char *multiOptionsText[]  = { "EmuNAND Predeterminada: 1( ) 2( ) 3( ) 4( )",
+                                               "Brillo de pantalla: 4( ) 3( ) 2( ) 1( )",
+                                               "Splash: No( ) Antes( ) Despues( ) payloads",
+                                               "Duracion de Splash: 1( ) 3( ) 5( ) 7( ) segundos",
+                                               "Bloqueo con pin: No( ) 4( ) 6( ) 8( ) digitos",
+                                               "CPU de New 3DS: No( ) Clock( ) L2( ) Clock+L2( )",
                                              };
 
-    static const char *singleOptionsText[] = { "( ) Autoboot EmuNAND",
-                                               "( ) Use EmuNAND FIRM if booting with R",
-                                               "( ) Enable loading external FIRMs and modules",
-                                               "( ) Enable game patching",
-                                               "( ) Show NAND or user string in System Settings",
-                                               "( ) Show GBA boot screen in patched AGB_FIRM",
-                                               "( ) Set developer UNITINFO",
-                                               "( ) Disable ARM11 exception handlers",
+    static const char *singleOptionsText[] = { "( ) Autoiniciar EmuNAND",
+                                               "( ) Usar firm de EmuNand al iniciar con R",
+                                               "( ) Activar la carga de firms y modulos externos",
+                                               "( ) Actvar parcheo de juegos",
+                                               "( ) Mostrar Nand en Config. de Sistema",
+                                               "( ) Mostrar bootscreen de GBA en AGB_FIRM",
+                                               "( ) Establecer desarrollador UNITINFO",
+                                               "( ) Desactivar ARM11 exception handlers",
                                              };
 
-    static const char *optionsDescription[]  = { "Select the default EmuNAND.\n\n"
-                                                 "It will be booted when no\n"
-                                                 "directional pad buttons are pressed.",
+    static const char *optionsDescription[]  = { "Selecciona EmuNand predeterminada.\n\n"
+                                                 "Esta arrancara cuando no hayan botones\n"
+                                                 "del pad direcional presionados.",
 
-                                                 "Select the screen brightness.",
+                                                 "Selecciona el brillo de pantalla.",
 
-                                                 "Enable splash screen support.\n\n"
-                                                 "\t* 'Before payloads' displays it\n"
-                                                 "before booting payloads\n"
-                                                 "(intended for splashes that display\n"
-                                                 "button hints).\n\n"
-                                                 "\t* 'After payloads' displays it\n"
-                                                 "afterwards.",
+                                                 "Activa el soporte de splash.\n\n"
+                                                 "\t*'Antes de payloads' los muestra\n"
+                                                 "antes de arrancar los payloads\n"
+                                                 "(destinado a splashes que muestran\n"
+                                                 "indicaciones de botones).\n\n"
+                                                 "\t*'Despues de payloads' los muestra\n"
+                                                 "despues.",
 
-                                                 "Select how long the splash screen\n"
-                                                 "displays.\n\n"
-                                                 "This has no effect if the splash\n"
-                                                 "screen is not enabled.",
+                                                 "Selecciona cuanto tiempo se muestra\n"
+                                                 "la pantalla de splash.\n\n"
+                                                 "Esto no tiene ningun efecto si la\n"
+                                                 "pantalla de splash no esta activada.",
 
-                                                 "Activate a PIN lock.\n\n"
-                                                 "The PIN will be asked each time\n"
-                                                 "Luma3DS boots.\n\n"
-                                                 "4, 6 or 8 digits can be selected.\n\n"
-                                                 "The ABXY buttons and the directional\n"
-                                                 "pad buttons can be used as keys.\n\n"
-                                                 "A message can also be displayed\n"
-                                                 "(refer to the wiki for instructions).",
+                                                 "Activa bloqueo de PIN.\n\n"
+                                                 "El PIN se pedira cada vez que\n"
+                                                 "Luma3DS arranque.\n\n"
+                                                 "4, 6 o 8 digitos pueden ser elegidos.\n\n"
+                                                 "Los botones ABXY y botones del pad\n"
+                                                 "direccional pueden ser usados como\n"
+												 "clave.\n\n"
+                                                 "Un mensaje tambien se puede mostrar\n"
+                                                 "(consulte la wiki por instrucciones).",
 
-                                                 "Select the New 3DS CPU mode.\n\n"
-                                                 "This won't apply to\n"
-                                                 "New 3DS exclusive/enhanced games.\n\n"
-                                                 "'Clock+L2' can cause issues with some\n"
-                                                 "games.",
+                                                 "Selecciona el modo de New 3DS CPU.\n\n"
+                                                 "Esto no aplicara a \n"
+                                                 "exclusivos\\mejorados de New 3DS.\n\n"
+                                                 "'Clock+L2' puede causar problemas\n"
+                                                 "en algunos juegos.",
 
-                                                 "If enabled, an EmuNAND\n"
-                                                 "will be launched on boot.\n\n"
-                                                 "Otherwise, SysNAND will.\n\n"
-                                                 "Hold L on boot to switch NAND.\n\n"
-                                                 "To use a different EmuNAND from the\n"
-                                                 "default, hold a directional pad button\n"
-                                                 "(Up/Right/Down/Left equal EmuNANDs\n"
-                                                 "1/2/3/4).",
+                                                 "Si es activado, una EmuNAND se\n"
+                                                 "ejecutara en el arranque.\n\n"
+                                                 "De otro modo, lo hara la SysNAND.\n\n"
+                                                 "Manten L en el arranque para\n" 
+												 "intercambiar NAND.\n\n"
+                                                 "Para usar una EmuNand distinta a la\n"
+                                                 "predeterminada, aprieta un boton\n"
+                                                 "direccional (Arriba/Derecha/Aba/Izq\n" 
+												 "igual a la EmuNAND 1/2/3/4).",
 
-                                                 "If enabled, when holding R on boot\n"
-                                                 "SysNAND will be booted with an\n"
-                                                 "EmuNAND FIRM.\n\n"
-                                                 "Otherwise, an EmuNAND will be booted\n"
-                                                 "with the SysNAND FIRM.\n\n"
-                                                 "To use a different EmuNAND from the\n"
-                                                 "default, hold a directional pad button\n"
-                                                 "(Up/Right/Down/Left equal EmuNANDs\n"
-                                                 "1/2/3/4), also add A if you have\n"
-                                                 "a matching payload.",
+                                                 "Si es activado, al mantener R\n"
+                                                 "SysNAND arrancara con FIRM EmuNAND.\n"
+                                                 "De otra manera, una EmuNAND arrancara\n"
+                                                 "con FIRM SysNAND.\n"
+                                                 "Para usar una EmuNand distinta a la\n"
+                                                 "predeterminada, aprieta un boton dpad\n"
+                                                 "(Arriba/Derecha/Abajo/Izquierda igual\n"
+                                                 "a la EmuNAND 1/2/3/4),ademas pulsa A \n"
+                                                 "si tienes un payload correspondiente.",
 
-                                                 "Enable loading external FIRMs and\n"
-                                                 "system modules.\n\n"
-                                                 "This isn't needed in most cases.\n\n"
-                                                 "Refer to the wiki for instructions.",
+                                                 "Activa la carga de FIRMs externos\n"
+                                                 "y modulos de sistemas.\n\n"
+                                                 "Esto no es requerido en la mayoria\n"
+												 "de los casos.\n\n"
+                                                 "Consulta la wiki por instrucciones.",
 
-                                                 "Enable overriding the region and\n"
-                                                 "language configuration and the usage\n"
-                                                 "of patched code binaries, exHeaders,\n"
-                                                 "IPS code patches and LayeredFS\n"
-                                                 "for specific games.\n\n"
-                                                 "Also makes certain DLCs\n"
-                                                 "for out-of-region games work.\n\n"
-                                                 "Refer to the wiki for instructions.",
+                                                 "Activar la anulacion de la region\n"
+                                                 "y configuracion del lenguaje y el uso\n"
+                                                 "de codigos binarios parcheados,\n"
+                                                 "exHeaders, parches IPS y LayeredFS\n"
+                                                 "para juegos especificos.\n\n"
+                                                 "Ademas hace que ciertos DLCs de\n"
+                                                 "juegos fuera de region funcionen.\n\n"
+                                                 "Consulte la wiki por instrucciones.",
 
-                                                 "Enable showing the current NAND/FIRM:\n\n"
+                                                 "Activar mostrar la actual NAND/FIRM:\n\n"
                                                  "\t* Sys  = SysNAND\n"
                                                  "\t* Emu  = EmuNAND 1\n"
                                                  "\t* EmuX = EmuNAND X\n"
-                                                 "\t* SysE = SysNAND with EmuNAND 1 FIRM\n"
-                                                 "\t* SyEX = SysNAND with EmuNAND X FIRM\n"
-                                                 "\t* EmuS = EmuNAND 1 with SysNAND FIRM\n"
-                                                 "\t* EmXS = EmuNAND X with SysNAND FIRM\n\n"
-                                                 "or a user-defined custom string in\n"
-                                                 "System Settings.\n\n"
-                                                 "Refer to the wiki for instructions.",
+                                                 "\t* SysE = SysNAND con EmuNAND 1 FIRM\n"
+                                                 "\t* SyEX = SysNAND con EmuNAND X FIRM\n"
+                                                 "\t* EmuS = EmuNAND 1 con SysNAND FIRM\n"
+                                                 "\t* EmXS = EmuNAND X con SysNAND FIRM\n\n"
+                                                 "o una cadena personalizada definida\n"
+                                                 "por el usuario en Conf. del Sistema.\n\n"
+                                                 "Consulte la wiki por instrucciones.",
 
-                                                 "Enable showing the GBA boot screen\n"
-                                                 "when booting GBA games.",
+                                                 "Activar mostrar la pantalla de inicio\n"
+                                                 "GBA al iniciar juegos de GBA.",
 
-                                                 "Make the console be always detected\n"
-                                                 "as a development unit, and conversely.\n"
-                                                 "(which breaks online features, amiibo\n"
-                                                 "and retail CIAs, but allows installing\n"
-                                                 "and booting some developer software).\n\n"
-                                                 "Only select this if you know what you\n"
-                                                 "are doing!",
+                                                 "Hace que la consola sea siempre\n"
+                                                 "detectada como una development unit,\n"
+                                                 "y a la inversa (la cual rompe\n"
+												 "caracteristicas online, amiibo\n"
+                                                 "y retail CIAs, pero permite la\n"
+												 "instalacion y la ejecucion de algun\n"
+                                                 "software de dev).\n\n"
+                                                 "Solamente selecciona esto si tienes\n"
+                                                 "idea de lo que estas haciendo!",
 
-                                                 "Disables the fatal error exception\n"
-                                                 "handlers for the ARM11 CPU.\n\n"
-                                                 "Note: Disabling the exception handlers\n"
-                                                 "will disqualify you from submitting\n"
-                                                 "issues or bug reports to the Luma3DS\n"
-                                                 "GitHub repository!"
+                                                 "Desactiva fatal error exception\n"
+                                                 "handlers para el CPU ARM11.\n\n"
+                                                 "Nota: Desactivar exception handlers\n"
+                                                 "te descalificara de subir problemas\n"
+                                                 "reportes de bug a el repositorio\n"
+                                                 "GitHub de Luma3DS!"
                                                };
 
     struct multiOption {
@@ -255,8 +259,8 @@ void configMenu(bool oldPinStatus, u32 oldPinMode)
                                        "FIRM1" };
 
     drawString(true, 10, 10, COLOR_TITLE, CONFIG_TITLE);
-    drawString(true, 10, 10 + SPACING_Y, COLOR_TITLE, "Press A to select, START to save");
-    drawFormattedString(false, 10, SCREEN_HEIGHT - 2 * SPACING_Y, COLOR_YELLOW, "Booted from %s via %s", isSdMode ? "SD" : "CTRNAND", bootTypes[(u32)bootType]);
+    drawString(true, 10, 10 + SPACING_Y, COLOR_TITLE, "Presiona A para elegir, START para guardar");
+    drawFormattedString(false, 10, SCREEN_HEIGHT - 2 * SPACING_Y, COLOR_YELLOW, "Iniciado desde %s via %s", isSdMode ? "SD" : "CTRNAND", bootTypes[(u32)bootType]);
 
     //Character to display a selected option
     char selected = 'x';
@@ -413,7 +417,7 @@ void configMenu(bool oldPinStatus, u32 oldPinMode)
     else if(oldPinStatus)
     {
         if(!fileDelete(PIN_FILE))
-            error("Unable to delete PIN file");
+            error("Incapaz de borrar archivo PIN");
     }
 
     while(HID_PAD & PIN_BUTTONS);

@@ -103,23 +103,23 @@ void main(int argc, char **argv, u32 magicWord)
 
         setupKeyslots();
     }
-    else error("Launched using an unsupported loader.");
+    else error("Ejecutado desde una lanzador no soportado.");
 
     if(memcmp(launchedPath, u"sdmc", 8) == 0)
     {
-        if(!mountFs(true, false)) error("Failed to mount SD.");
+        if(!mountFs(true, false)) error("Fallo al montar SD.");
         isSdMode = true;
     }
     else if(memcmp(launchedPath, u"nand", 8) == 0)
     {
-        if(!mountFs(false, true)) error("Failed to mount CTRNAND.");
+        if(!mountFs(false, true)) error("Montaje de CTRNAND fallido.");
         isSdMode = false;
     }
     else if(bootType == NTR || memcmp(launchedPath, u"firm", 8) == 0)
     {
         if(mountFs(true, false)) isSdMode = true;
         else if(mountFs(false, true)) isSdMode = false;
-        else error("Failed to mount SD and CTRNAND.");
+        else error("Montaje de SD y CTRNAND fallido.");
 
         if(bootType == NTR)
         {
@@ -137,7 +137,7 @@ void main(int argc, char **argv, u32 magicWord)
             mountPoint[i] = (char)launchedPath[i];
         mountPoint[i] = 0;
 
-        error("Launched from an unsupported location: %s.", mountPoint);
+        error("Ejecutado desde una ubicacion no soportada: %s.", mountPoint);
     }
 
     //Attempt to read the configuration file
@@ -307,7 +307,7 @@ boot:
         locateEmuNand(&nandType);
         if(nandType == FIRMWARE_SYSNAND) firmSource = FIRMWARE_SYSNAND;
         else if((*(vu16 *)(SDMMC_BASE + REG_SDSTATUS0) & TMIO_STAT0_WRPROTECT) == 0) //Make sure the SD card isn't write protected
-            error("The SD card is locked, EmuNAND can not be used.\nPlease turn the write protection switch off.");
+            error("La SD esta bloqueada, EmuNand no puede ser usada.\nPorfavor desactiva la proteccion de escritura.");
     }
 
     //Same if we're using EmuNAND as the FIRM source
@@ -343,7 +343,7 @@ boot:
             break;
     }
 
-    if(res != 0) error("Failed to apply %u FIRM patch(es).", res);
+    if(res != 0) error("Fallo al aplicar %u parche(s) FIRM.", res);
 
     if(bootType != FIRMLAUNCH) deinitScreens();
     launchFirm(0, NULL);
