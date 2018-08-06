@@ -55,7 +55,7 @@ bool ShowUnlockSequence(u32 seqlvl)
         if (lvl == len)
             break;
         u32 pad_state = waitInputWithTimeout(10000);
-        if (!(pad_state & BUTTON_A))
+        if (!(pad_state & BUTTON_ANY))
             continue;
         else if (pad_state & sequences[seqlvl][lvl])
             lvl++;
