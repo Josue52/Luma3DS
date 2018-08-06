@@ -77,7 +77,7 @@ void RosalinaMenu_ShowCredits(void)
         posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Codigo de carga de 3DSX por fincs");
         posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Codigo de Red & funcionalidad basica GDB por Stary");
         posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "InputRedirection por Stary (PoC por ShinyQuagsire)");
-		posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_WHITE, "Menu de herramientas por Kasai07");
+		posY = Draw_DrawString(10, posY + SPACING_Y, RGB565(0xD7, 0x9A, 0x28), "Menu de herramientas por Kasai07");
         posY = Draw_DrawString(10, posY + SPACING_Y, COLOR_GREEN, "Traduccion por Josue52");
 		
         posY += 2 * SPACING_Y;
