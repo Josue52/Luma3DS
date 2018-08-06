@@ -332,7 +332,6 @@ void Delete_Title(void)
 	amInit();
 	reboot = false;
 	bool reboothomemenu = false;
-	menuLeave();
 	
 	u32 tmp = 0;
 	
@@ -391,7 +390,6 @@ void Delete_Title(void)
 				}	
 			}*/
 			
-			menuEnter();
 			Draw_Lock();
 			Draw_DrawString(10, 10, COLOR_TITLE, "Menu de eliminacion de titulos");
 			Draw_DrawFormattedString(80, 180, COLOR_WHITE, "Title ID : %s                              ",info[index].productCode);

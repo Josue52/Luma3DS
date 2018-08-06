@@ -408,9 +408,9 @@ static void ProcessListMenu_MemoryViewer(const ProcessInfo *info)
                     viewerY += SPACING_Y;
                     Draw_DrawString(10, infoY, COLOR_WHITE, "Presiona L o R para cambiar entre heap y codigo.");
                     if((u32)menus[MENU_MODE_NORMAL].buf == heapDestAddress)
-                        Draw_DrawString(10 + SPACING_X * 31, infoY, COLOR_GREEN, "heap");
+                        Draw_DrawString(10 + SPACING_X * 34, infoY, COLOR_GREEN, "heap");
                     if((u32)menus[MENU_MODE_NORMAL].buf == codeDestAddress)
-                        Draw_DrawString(10 + SPACING_X * 40, infoY, COLOR_GREEN, "codigo");
+                        Draw_DrawString(10 + SPACING_X * 41, infoY, COLOR_GREEN, "codigo");
                 }
                 // ------------------------------------------
 
