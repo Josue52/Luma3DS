@@ -127,7 +127,7 @@ static inline u32 loadFirmFromStorage(FirmwareType firmType)
 
     if(!firmSize) return 0;
 
-    static const char *extFirmError = "The external FIRM is not valid.";
+    static const char *extFirmError = "El FIRM externo no es valido.";
 
     if(firmSize <= sizeof(Cxi) + 0x200) error(extFirmError);
 
@@ -138,14 +138,14 @@ static inline u32 loadFirmFromStorage(FirmwareType firmType)
         u8 cetk[0xA50];
 
         if(fileRead(cetk, cetkFiles[(u32)firmType], sizeof(cetk)) != sizeof(cetk))
-            error("The cetk is missing or corrupted.");
+            error("Falta cetk o esta corrupto.");
 
         firmSize = decryptNusFirm((Ticket *)(cetk + 0x140), (Cxi *)firm, firmSize);
 
-        if(!firmSize) error("Unable to decrypt the external FIRM.");
+        if(!firmSize) error("Incapaz de desencriptar el FIRM externo.");
     }
 
-    if(!checkFirm(firmSize)) error("The external FIRM is invalid or corrupted.");
+    if(!checkFirm(firmSize)) error("El FIRM externo es invalido o esta corrupto.");
 
     return firmSize;
 }
@@ -182,19 +182,19 @@ u32 loadNintendoFirm(FirmwareType *firmType, FirmwareSource nandType, bool loadF
             loadedFromStorage = true;
             firmSize = result;
         }
-        else if(ctrNandError) error("Unable to mount CTRNAND or load the CTRNAND FIRM.\nPlease use an external one.");
+        else if(ctrNandError) error("Incapaz de montar CTRNAND o cargar su FIRM.\nPorfavor use una externa.");
     }
 
     //Check that the FIRM is right for the console from the ARM9 section address
     if((firm->section[3].offset != 0 ? firm->section[3].address : firm->section[2].address) != (ISN3DS ? (u8 *)0x8006000 : (u8 *)0x8006800))
-        error("The %s FIRM is not for this console.", loadedFromStorage ? "external" : "CTRNAND");
+        error("El %s FIRM no es para esta consola.", loadedFromStorage ? "external" : "CTRNAND");
 
     if(!ISN3DS && *firmType == NATIVE_FIRM && firm->section[0].address == (u8 *)0x1FF80000)
     {
         //We can't boot < 3.x EmuNANDs
-        if(nandType != FIRMWARE_SYSNAND) error("An old unsupported EmuNAND has been detected.\nLuma3DS is unable to boot it.");
+        if(nandType != FIRMWARE_SYSNAND) error("Una vieja EmuNand no soportada ha sido detectada.\nLuma3DS no la puede cargar");
 
-        if(isSafeMode) error("SAFE_MODE is not supported on 1.x/2.x FIRM.");
+        if(isSafeMode) error("SAFE_MODE no es soportado en 1.x/2.x FIRM.");
 
         *firmType = NATIVE_FIRM1X2X;
     }
@@ -245,7 +245,7 @@ void loadHomebrewFirm(u32 pressed)
     u32 maxPayloadSize = (u32)((u8 *)0x27FFE000 - (u8 *)firm),
         payloadSize = fileRead(firm, path, maxPayloadSize);
 
-    if(payloadSize <= 0x200 || !checkFirm(payloadSize)) error("The payload is invalid or corrupted.");
+    if(payloadSize <= 0x200 || !checkFirm(payloadSize)) error("El payload es invalido o corrupto.");
 
     char absPath[24 + 255];
 
@@ -303,7 +303,7 @@ static inline void mergeSection0(FirmwareType firmType, u32 firmVersion, bool lo
 
     //3) Read or copy the modules
     u8 *dst = firm->section[0].address;
-    const char *extModuleSizeError = "The external FIRM modules are too large.";
+    const char *extModuleSizeError = "Los modulos de FIRM externos son muy grandes.";
     for(u32 i = 0, dstModuleSize, maxModuleSize = firmType == NATIVE_FIRM ? 0x80000 : 0x600000; i < nbModules; i++, dst += dstModuleSize, maxModuleSize -= dstModuleSize)
     {
         if(loadFromStorage)
@@ -323,7 +323,7 @@ static inline void mergeSection0(FirmwareType firmType, u32 firmVersion, bool lo
                    fileRead(dst, fileName, dstModuleSize) != dstModuleSize ||
                    memcmp(((Cxi *)dst)->ncch.magic, "NCCH", 4) != 0 ||
                    memcmp(moduleList[i].name, ((Cxi *)dst)->exHeader.systemControlInfo.appTitle, sizeof(((Cxi *)dst)->exHeader.systemControlInfo.appTitle)) != 0)
-                    error("An external FIRM module is invalid or corrupted.");
+                    error("Un modulo FIRM externo es invalido o corrupto.");
 
                 continue;
             }
@@ -340,7 +340,7 @@ static inline void mergeSection0(FirmwareType firmType, u32 firmVersion, bool lo
     if(nbModules == 6)
     {
         if(patchK11ModuleLoading(firm->section[0].size, dst - firm->section[0].address, (u8 *)firm + firm->section[1].offset, firm->section[1].size) != 0)
-            error("Failed to inject custom sysmodule");
+            error("Fallo al inyectar sysmodules personalizados");
     }
 }
 
