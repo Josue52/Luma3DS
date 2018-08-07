@@ -11,7 +11,7 @@
 #include "fmt.h"
 #include "utils.h"
 #include "menus/gsplcd.h"
-
+#include "rgb.h"
 bool reboot;
 
 Menu MenuOptions = {
@@ -332,7 +332,6 @@ void Delete_Title(void)
 	amInit();
 	reboot = false;
 	bool reboothomemenu = false;
-	
 	u32 tmp = 0;
 	
 	svcControlMemoryEx(&tmp, MAP_BASE_1, 0, MAP_BASE_SIZE, MEMOP_ALLOC, MEMPERM_READ | MEMPERM_WRITE, true);
@@ -340,9 +339,8 @@ void Delete_Title(void)
 	AM_TitleEntry* title = (AM_TitleEntry*)0x08006000;
 	u64 *titleIds = NULL;
 	titleIds = (u64 *)0x08008000;
-	
+	Draw_DrawString(10, 10, COLOR_TITLE, "Cargando.");
 	Info_Title* info = (Info_Title*)0x08010000;
-	
 	while(true)
 	{
 		
@@ -353,26 +351,28 @@ void Delete_Title(void)
 		u32 titleRead = 0;
 		AM_GetTitleList(&titleRead, MEDIATYPE_SD, titleCount, titleIds);
 		
-		
 		for(u32 i = 0; i < titleCount; i++)
 		{
 			memset(info[i].shortDescription, 0,0x40);
 			memset(info[i].productCode, 0,0x10);
 			get_Name_TitleID(titleIds[i], i, info);
+			Draw_DrawString(10, 10, COLOR_TITLE, "Cargando..");
 			AM_GetTitleInfo(MEDIATYPE_SD, titleCount, &titleIds[i], &title[i]);
+			Draw_DrawString(10, 10, COLOR_TITLE, "Cargando...");
 			AM_GetTitleProductCode(MEDIATYPE_SD, title[i].titleID, info[i].productCode);
+			Draw_DrawString(10, 10, COLOR_TITLE, "Cargando.");
 		}	
-		
 		u32 index = 0;
 		u32 pos = 0;
 		while(true)
 		{
 			if(index==0)pos=0;
+			Draw_DrawString(10, 10, COLOR_TITLE, "Cargando..");
 			if(titleCount>11)
 			{
 				if((pos+10)<index){
 					pos++; 
-					
+				Draw_DrawString(10, 10, COLOR_TITLE, "Cargando...");
 				}
 				if(pos>index)pos--;
 				if(index==titleCount-1)pos=titleCount-11;
@@ -389,11 +389,11 @@ void Delete_Title(void)
 					*((u8*)FB_BOTTOM_VRAM_ADDR + screenPos++) = 0x30;
 				}	
 			}*/
-			
 			Draw_Lock();
 			Draw_DrawString(10, 10, COLOR_TITLE, "Menu de eliminacion de titulos");
-			Draw_DrawFormattedString(80, 180, COLOR_WHITE, "Title ID : %s                              ",info[index].productCode);
-			Draw_DrawFormattedString(80, 195, COLOR_WHITE, "Publicher: %s                              ",info[index].publisher);
+			Draw_DrawFormattedString(80, 180, COLOR_WHITE, "TitleID : %s                           ",info[index].productCode);
+			Draw_DrawFormattedString(80, 195, COLOR_WHITE, "Editor  : %s                           ",info[index].publisher);
+			Draw_DrawFormattedString(80, 210, COLOR_GREY , "Nombre  : %s                           ",info[index].shortDescription);
 			for(u32 i = 0; i < titleCount; i++)
 			{
 				Draw_DrawString(10, 40+(i*10), COLOR_BLACK, "                                                  ");
@@ -522,7 +522,7 @@ void get_Name_TitleID(u64 titleId, u32 count, Info_Title* info)
 				smdhTitle = select_smdh_title(smdh);
 				
 				utf16_to_utf8((uint8_t*) info[count].shortDescription, smdhTitle->shortDescription, sizeof(info[count].shortDescription) - 1);
-				//utf16_to_utf8((uint8_t*) info[count].longDescription, smdhTitle->longDescription, sizeof(info[count].longDescription) - 1);
+				utf16_to_utf8((uint8_t*) info[count].longDescription, smdhTitle->longDescription, sizeof(info[count].longDescription) - 1);
 				utf16_to_utf8((uint8_t*) info[count].publisher, smdhTitle->publisher, sizeof(info[count].publisher) - 1);
 				memcpy(info[count].largeIcon, smdh->largeIcon, 0x1200);
 				
