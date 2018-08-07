@@ -21,7 +21,7 @@ Menu MenuOptions = {
         { "Explorador", METHOD, .method = &Explorer },
 		{ "ChainLoader", METHOD, .method = &bootloader },
 		{ "Instalar CIAs", METHOD, .method = &CIA_menu },
-		{ "Eliminar CIAs (rota)", METHOD, .method = &Delete_Title },
+		{ "Eliminar titulos", METHOD, .method = &Delete_Title },
 		{ "Brillo de pantalla", METHOD, .method = &setup_Brightness }
     }
 };
@@ -402,43 +402,6 @@ void Delete_Title(void)
 				if(i==10)break;
 			}
 			
-			
-			//=======SDMH======
-			
-			u8 IconPixel[0x1200];
-			u8 OrdrePixel[64] = {
-			0,  1,  8,  9,  2,  3,  10, 11, 16, 17, 24, 25, 18, 19, 26, 27,
-			4,  5,  12, 13, 6,  7,  14, 15, 20, 21, 28, 29, 22, 23, 30, 31,
-			32, 33, 40, 41, 34, 35, 42, 43, 48, 49, 56, 57, 50, 51, 58, 59,
-			36, 37, 44, 45, 38, 39, 46, 47, 52, 53, 60, 61, 54, 55, 62, 63 };
-			int count = 0;
-			for( int y = 0; y < 48; y += 8)
-			{
-				for(int x = 0; x < 48; x += 8)
-				{
-					for(int k = 0; k < 64; k++)
-					{
-						u8 xx =  (OrdrePixel[k] & 0x7);
-						u8 yy =  (OrdrePixel[k] >> 3);
-						IconPixel[(((x + xx) * 48 + (y + yy)) * 2)+0] = info[index].largeIcon[count++];
-						IconPixel[(((x + xx) * 48 + (y + yy)) * 2)+1] = info[index].largeIcon[count++];
-					}
-				}
-			}
-			
-			int pixel=0;
-			for(int y = 0; y < 48; y++)
-			{	 
-				for(int x = 0; x < 48; x++)	
-				{
-					//u32 screenPos = (posX * 240 * 2 + (240 - x - posY -1) * 2) + y * 2 * 240;
-					u32 screenPos = (20 * 240 * 2 + (240 - x - 170 -1) * 2) + y * 2 * 240;
-					*((u8*)FB_BOTTOM_VRAM_ADDR + screenPos++) = IconPixel[pixel++];
-					*((u8*)FB_BOTTOM_VRAM_ADDR + screenPos++) = IconPixel[pixel++];
-				}	
-			}
-			//====================
-			
 			Draw_FlushFramebuffer();
 			Draw_Unlock();
 			
@@ -450,7 +413,7 @@ void Delete_Title(void)
 					reboot=true;
 					Draw_Lock();
 					Draw_ClearFramebuffer();
-					Draw_DrawFormattedString(10, 10, COLOR_WHITE, "Eliminar titulo %s.",info[index].shortDescription);
+					Draw_DrawFormattedString(10, 10, COLOR_WHITE, "Eliminando titulo %s.",info[index].shortDescription);
 					AM_DeleteTitle(MEDIATYPE_SD, title[index].titleID);
 					Draw_DrawString(10, 30, COLOR_GREEN, "Eliminacion de titulo completada...");
 					Draw_FlushFramebuffer();
