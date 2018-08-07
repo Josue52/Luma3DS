@@ -64,11 +64,11 @@ static int ERRF_FormatError(char *out, ERRF_FatalErrInfo *info)
 {
     char *outStart = out;
     static const char *types[] = {
-        "generic", "corrupted", "card removed", "exception", "result failure", "logged", "invalid"
+        "generico", "corrupto", "tarjeta removida", "excepcion", "fallo de resultado", "logueado", "invalido"
     };
 
     static const char *exceptionTypes[] = {
-        "prefetch abort", "data abort", "undefined instruction", "VFP", "invalid"
+        "aborto prefetch", "aborto de datos", "intrucciones indefinidas", "VFP", "invalido"
     };
 
     const char *type = (u32)info->type > (u32)ERRF_ERRTYPE_LOGGED ? types[6] : types[(u32)info->type];
@@ -88,7 +88,7 @@ static int ERRF_FormatError(char *out, ERRF_FatalErrInfo *info)
         Handle processHandle;
         Result res;
 
-        out += sprintf(out, "\nProcess ID:       %u\n", info->procId);
+        out += sprintf(out, "\nID de proceso:       %u\n", info->procId);
 
         res = svcOpenProcess(&processHandle, info->procId);
         if(R_SUCCEEDED(res))
@@ -98,8 +98,8 @@ static int ERRF_FormatError(char *out, ERRF_FatalErrInfo *info)
             svcGetProcessInfo((s64 *)name, processHandle, 0x10000);
             svcGetProcessInfo((s64 *)&titleId, processHandle, 0x10001);
             svcCloseHandle(processHandle);
-            out += sprintf(out, "Process name:     %s\n", name);
-            out += sprintf(out, "Process title ID: 0x%016llx\n", titleId);
+            out += sprintf(out, "Nombre de proceso:     %s\n", name);
+            out += sprintf(out, "Title ID de proceso: 0x%016llx\n", titleId);
         }
 
         out += sprintf(out, "\n");
