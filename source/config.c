@@ -145,7 +145,7 @@ void configMenu(bool oldPinStatus, u32 oldPinMode)
                                                  "Si es activado, al mantener R\n"
                                                  "SysNAND arrancara con FIRM EmuNAND.\n"
                                                  "De otra manera, una EmuNAND arrancara\n"
-                                                 "con FIRM SysNAND.\n"
+                                                 "con FIRM SysNAND.\n\n"
                                                  "Para usar una EmuNand distinta a la\n"
                                                  "predeterminada, aprieta un boton dpad\n"
                                                  "(Arriba/Derecha/Abajo/Izquierda igual\n"
