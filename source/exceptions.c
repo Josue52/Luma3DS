@@ -99,25 +99,25 @@ void detectAndProcessExceptionDumps(void)
         {
             u32 instr = *(vu32 *)(stackDump - 4);
             if(instr == 0xE12FFF7E)
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[0]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepciom:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[0]);
             else if(instr == 0xEF00003C)
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[1]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[1]);
             else
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s", handledExceptionNames[dumpHeader->type]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s", handledExceptionNames[dumpHeader->type]);
         }
         else if((regs[16] & 0x20) != 0 && dumpHeader->codeDumpSize >= 2)
         {
             u16 instr = *(vu16 *)(stackDump - 2);
             if(instr == 0xDF3C)
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[0]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s (%s)", handledExceptionNames[dumpHeader->type], specialExceptions[0]);
             else
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s", handledExceptionNames[dumpHeader->type]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s", handledExceptionNames[dumpHeader->type]);
         }
         else
-            posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s", handledExceptionNames[dumpHeader->type]);
+            posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s", handledExceptionNames[dumpHeader->type]);
     }
     else
-        posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Exception type:  %s", handledExceptionNames[dumpHeader->type]);
+        posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Tipo de excepcion:  %s", handledExceptionNames[dumpHeader->type]);
 
     if(dumpHeader->processor == 11 && dumpHeader->type >= 2)
     {
@@ -126,14 +126,14 @@ void detectAndProcessExceptionDumps(void)
         for(u32 i = 0; i < 15; i++)
             if(xfsr == faultStatusValues[i])
             {
-                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Fault status:    %s", faultStatusNames[i]);
+                posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE, "Estado de falla:    %s", faultStatusNames[i]);
                 break;
             }
     }
 
     if(dumpHeader->additionalDataSize != 0)
         posY = drawFormattedString(true, 10, posY + SPACING_Y, COLOR_WHITE,
-                                   "Current process: %.8s (%016llX)", (const char *)additionalData, *(vu64 *)(additionalData + 8));
+                                   "Proceso actual: %.8s (%016llX)", (const char *)additionalData, *(vu64 *)(additionalData + 8));
     posY += SPACING_Y;
 
     for(u32 i = 0; i < 17; i += 2)
